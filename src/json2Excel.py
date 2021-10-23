@@ -27,7 +27,16 @@ def main():
     finally:
         logging.info('Done')
 
+def main_list():
+    try:
+        data = read_json(filename="../data/sample-nest-list.json")
+        df = pd.json_normalize(data, max_level=2)
+        df.to_excel(outFilename)
+    except Exception as ex:
+        logging.error(ex)
+    finally:
+        logging.info('Done')
 
 if __name__ == '__main__':
-    main()
+    main_list()
 
