@@ -1,0 +1,80 @@
+[   {
+  "id": 1,
+  "firstName":"Shubham1",
+  "lastName":"Verma",
+  "funds": [
+    {
+      "fund_id": "JPM1",
+      "txn_type": "subscription",
+      "unit": 10
+    },
+    {
+      "fund_id": "JPM2",
+      "txn_type": "redemption",
+      "unit": 20
+    }
+  ],
+  "email":"example@gmail.com",
+  "Mob:":1234567890,
+  "country":"India"
+},
+  {
+  "id": 2,
+  "firstName":"Shubham3",
+  "lastName":"Verma",
+  "email":"example@gmail.com",
+  "Mob:":1234567890,
+  "country":"Singapore"
+},
+  {
+    "id": 3,
+    "firstName":"Shubham2",
+    "lastName":"Verma",
+    "funds": [
+      {
+        "fund_id": "JPM2",
+        "txn_type": "redemption",
+        "unit": 30
+      },
+      {
+        "fund_id": "JPM3",
+        "txn_type": "redemption",
+        "unit": 40
+      }
+    ],
+    "email":"example@gmail.com",
+    "Mob:":1234567890,
+    "country":"India"
+  },
+  {
+    "id": 4,
+    "firstName":"Shubham4",
+    "lastName":"Verma",
+    "email":"example@gmail.com",
+    "Mob:":1234567890,
+    "country":"China"
+  },
+  {
+    "id": 5,
+    "firstName":"Shubham5",
+    "lastName":"Verma",
+    "email":"example@gmail.com",
+    "Mob:":1234567890,
+    "country":"Taiwan"
+  },
+  {
+    "id": 6,
+    "firstName":"Shubham6",
+    "lastName":"Verma",
+    "email":"example@gmail.com",
+    "Mob:":1234567890,
+    "country":"Japan"
+  },
+  {
+    "id": 7,
+    "firstName":"Shubham7",
+    "lastName":"Verma",
+    "email":"example@gmail.com",
+    "Mob:":1234567890,
+    "country":"HongKong"
+  }]

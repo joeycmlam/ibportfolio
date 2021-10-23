@@ -1,0 +1,51 @@
+[
+  {
+    "firstName": "Shubham1",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "India"
+  },
+  {
+    "firstName": "Shubham2",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "India"
+  },
+  {
+    "firstName": "Shubham3",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "Singapore"
+  },
+  {
+    "firstName": "Shubham4",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "China"
+  },
+  {
+    "firstName": "Shubham5",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "Taiwan"
+  },
+  {
+    "firstName": "Shubham6",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "Japan"
+  },
+  {
+    "firstName": "Shubham7",
+    "lastName": "Verma",
+    "email": "example@gmail.com",
+    "Mob:": 1234567890,
+    "country": "HongKong"
+  }
+]
