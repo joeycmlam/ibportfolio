@@ -1,5 +1,6 @@
 import logging
 import utilJson
+import pprint
 
 cols = set()
 rows = []
@@ -18,16 +19,21 @@ def conv2Row(fields):
 
     rows.append(row)
 
-def nestValues(prefix, fields, aRow, level):
-    for field in fields:
-        aField = prefix + '.' + field
-        addColumn(aField)
-        value = fields[field]
-        typeValue = type(value)
-        if typeValue == dict:
-            nestValues(field, value, 1)
-        else:
-            aRow[aField] = value
+def nestValues(prefix, nestedRows, aRow, level):
+    logging.debug('nestedValue')
+    i = 0
+    for row in nestedRows:
+        # need to clone a new row
+        for field in row:
+            aField = prefix + '.' + str(i) + '.' + field
+            addColumn(aField)
+            value = row[field]
+            typeValue = type(value)
+            if typeValue == list:
+                nestValues(field, value, 1)
+            else:
+                aRow[aField] = value
+        i += 1
 
 
 def denormalizedRow(fields):
@@ -35,13 +41,11 @@ def denormalizedRow(fields):
     for field in fields:
         value = fields[field]
         typeValue = type(value)
-        if typeValue == dict:
+        if typeValue == list:
             nestValues(field, value, row, 1)
         else:
             addColumn(field)
             row[field] = value
-
-
 
     rows.append(row)
 
@@ -56,11 +60,11 @@ def denormalizedJson(jsonMsg):
 
 def printTable():
     for aRecord in rows:
-        logging.info(aRecord)
+        pprint.pprint(aRecord)
 
 def main():
     try:
-        data = utilJson.read_json(filename="../data/sample-nest.json")
+        data = utilJson.read_json(filename="../data/sample-nest-list.json")
         logging.info('Start')
         denormalizedJson(data)
         printTable()
