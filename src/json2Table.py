@@ -40,7 +40,7 @@ def nestValues(prefix, nestedRows, aRow):
         i += 1
 
 
-def denormalizedRow(fields):
+def flattenRow(fields):
     row = {}  # dictionary
     for field in fields:
         value = fields[field]
@@ -59,7 +59,7 @@ def convert2Table(jsonMsg):
 
 def flattenJson(jsonMsg):
     for aRecord in jsonMsg:
-        denormalizedRow(aRecord)
+        flattenRow(aRecord)
 
 
 
