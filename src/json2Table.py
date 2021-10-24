@@ -1,9 +1,10 @@
 import logging
 import utilJson
 import pprint
+import xlwt
 
-cols = set()
 rows = []
+cols = set()
 
 
 def addColumn(field):
@@ -19,18 +20,21 @@ def conv2Row(fields):
 
     rows.append(row)
 
-def nestValues(prefix, nestedRows, aRow, level):
+def newRow(aRow):
+    logging.info('newRow')
+
+
+def nestValues(prefix, nestedRows, aRow):
     logging.debug('nestedValue')
     i = 0
     for row in nestedRows:
-        # need to clone a new row
         for field in row:
             aField = prefix + '.' + str(i) + '.' + field
             addColumn(aField)
             value = row[field]
             typeValue = type(value)
             if typeValue == list:
-                nestValues(field, value, 1)
+                nestValues(field, value, aRow)
             else:
                 aRow[aField] = value
         i += 1
@@ -42,7 +46,7 @@ def denormalizedRow(fields):
         value = fields[field]
         typeValue = type(value)
         if typeValue == list:
-            nestValues(field, value, row, 1)
+            nestValues(field, value, row)
         else:
             addColumn(field)
             row[field] = value
@@ -62,12 +66,33 @@ def printTable():
     for aRecord in rows:
         pprint.pprint(aRecord)
 
+def write2excel(fileName, sheetName):
+    wb = xlwt.Workbook()
+    sh = wb.add_sheet(sheetName)
+
+    #header
+    rowId = 0
+    colId = 0
+    for col in cols:
+        sh.write(rowId, colId, col)
+        colId += 1
+
+    #content
+    for row in rows:
+        colId = 0
+        rowId += 1
+        for col in cols:
+            sh.write(rowId, colId, row[col])
+            colId += 1
+    wb.save(fileName)
+
 def main():
     try:
         data = utilJson.read_json(filename="../data/sample-nest-list.json")
+        fileName = '../output/test2.xls'
         logging.info('Start')
         denormalizedJson(data)
-        printTable()
+        write2excel(fileName, 'Sheet1')
         logging.info('Done')
     except Exception as ex:
         logging.error(ex)

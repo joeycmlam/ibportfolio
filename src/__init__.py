@@ -2,8 +2,9 @@ import logging
 
 
 if __name__ == '__main__':
-    FORMAT = '%(asctime)-15s %(message)s'
-    logging.basicConfig(filename='../log/ibportfolio.log', format=FORMAT, level=logging.DEBUG)
+    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                        datefmt='%Y-%m-%d:%H:%M:%S',
+                        level=logging.INFO)
 
     logging.debug('debug test')
     logging.info('start!')

@@ -59,27 +59,27 @@ def main():
 
     try:
         # Read the JSON file as python dictionary
-        data = read_json(filename="../data/sample-nest.json")
+        data = read_json(filename="../data/sample.json")
+        outFilename = "../output/data.csv"
 
         # Normalize the nested python dict
         allRecords = []
         for aRecord in data:
             new_data = normalize_json(data=aRecord)
-            allRecords.insert(new_data)
+            # Pretty print the new dict object
+            print("New dict:", new_data)
+            # Generate the desired CSV data
+            csv_data = generate_csv_data(data=new_data)
+            allRecords.extend(csv_data)
 
-        # Pretty print the new dict object
-        print("New dict:", new_data)
-
-        # Generate the desired CSV data
-        csv_data = generate_csv_data(data=allRecords)
 
         # Save the generated CSV data to a CSV file
-        outFilename = "../output/data.csv"
-        write_to_file(data=csv_data, filepath=outFilename)
+        write_to_file(data=allRecords, filepath=outFilename)
+
     except Exception as ex:
         logging.error(ex)
     finally:
-        print('done')
+        logging.info('Done')
 
 
 if __name__ == '__main__':
