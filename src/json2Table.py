@@ -13,15 +13,16 @@ def addColumn(field):
 
 
 def conv2Row(fields):
-    row = {}  # dictionary
-    for field in fields:
-        row[field] = fields[field]
-        addColumn(field)
+    try:
+        row = {}  # dictionary
+        for field in fields:
+            row[field] = fields[field]
+            addColumn(field)
 
-    rows.append(row)
-
-def newRow(aRow):
-    logging.info('newRow')
+        rows.append(row)
+    except Exception as ex:
+        logging.error(ex)
+        raise Exception(ex)
 
 
 def nestValues(prefix, nestedRows, aRow):
@@ -53,9 +54,16 @@ def flattenRow(fields):
 
     rows.append(row)
 
+
 def convert2Table(jsonMsg):
-    for aRecord in jsonMsg:
-        conv2Row(aRecord)
+    logging.info('convert2Table')
+    try:
+        for aRecord in jsonMsg:
+            conv2Row(aRecord)
+    except Exception as ex:
+        logging.error(ex)
+        raise Exception(ex)
+
 
 def flattenJson(jsonMsg):
     logging.info('flattenJson')
@@ -63,45 +71,48 @@ def flattenJson(jsonMsg):
         flattenRow(aRecord)
 
 
-
-def printTable():
-    for aRecord in rows:
-        pprint.pprint(aRecord)
-
 def write2excel(fileName, sheetName):
     logging.info('write2excel: [%s][%s]', fileName, sheetName)
     wb = xlwt.Workbook()
     sh = wb.add_sheet(sheetName)
 
-    #header
+    # header
     rowId = 0
     colId = 0
     for col in cols:
         sh.write(rowId, colId, col)
         colId += 1
 
-    #content
-    for row in rows:
-        colId = 0
-        rowId += 1
-        for col in cols:
-            if col in row:
-                sh.write(rowId, colId, row[col])
-            colId += 1
-    wb.save(fileName)
+    try:
+        # content
+        for row in rows:
+            colId = 0
+            rowId += 1
+            for col in cols:
+                if col in row:
+                    sh.write(rowId, colId, row[col])
+                colId += 1
+    except Exception as ex:
+        logging.error('Error at rowid = %d colid = %d', rowId, colId)
+        raise Exception (ex)
+    finally:
+        wb.save(fileName)
+
 
 def main():
     try:
         data = utilJson.read_json(filename="../data/sample-nest-list-v2.json")
         fileName = '../output/test2.xls'
         logging.info('Start')
-        flattenJson(data)
+        # flattenJson(data)
+        convert2Table(data)
         write2excel(fileName, 'Sheet1')
         logging.info('Done')
     except Exception as ex:
-        logging.error(ex)
+        logging.error(ex.with_traceback())
     finally:
         logging.info('final.')
+
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
