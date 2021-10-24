@@ -58,6 +58,7 @@ def convert2Table(jsonMsg):
         conv2Row(aRecord)
 
 def flattenJson(jsonMsg):
+    logging.info('flattenJson')
     for aRecord in jsonMsg:
         flattenRow(aRecord)
 
@@ -68,6 +69,7 @@ def printTable():
         pprint.pprint(aRecord)
 
 def write2excel(fileName, sheetName):
+    logging.info('write2excel: [%s][%s]', fileName, sheetName)
     wb = xlwt.Workbook()
     sh = wb.add_sheet(sheetName)
 
@@ -83,13 +85,14 @@ def write2excel(fileName, sheetName):
         colId = 0
         rowId += 1
         for col in cols:
-            sh.write(rowId, colId, row[col])
+            if col in row:
+                sh.write(rowId, colId, row[col])
             colId += 1
     wb.save(fileName)
 
 def main():
     try:
-        data = utilJson.read_json(filename="../data/sample-nest-list.json")
+        data = utilJson.read_json(filename="../data/sample-nest-list-v2.json")
         fileName = '../output/test2.xls'
         logging.info('Start')
         flattenJson(data)
