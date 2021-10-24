@@ -57,9 +57,10 @@ def convert2Table(jsonMsg):
     for aRecord in jsonMsg:
         conv2Row(aRecord)
 
-def denormalizedJson(jsonMsg):
+def flattenJson(jsonMsg):
     for aRecord in jsonMsg:
         denormalizedRow(aRecord)
+
 
 
 def printTable():
@@ -91,7 +92,7 @@ def main():
         data = utilJson.read_json(filename="../data/sample-nest-list.json")
         fileName = '../output/test2.xls'
         logging.info('Start')
-        denormalizedJson(data)
+        flattenJson(data)
         write2excel(fileName, 'Sheet1')
         logging.info('Done')
     except Exception as ex:
