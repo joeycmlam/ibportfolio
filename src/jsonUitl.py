@@ -12,14 +12,22 @@ def write2excel(fileName, sheetName, data):
 
     try:
         logging.debug('write2excl')
+        header = {}
+        hRowId = 0
 
         # values
-        rowId = 0
+        rowId = 1
         for vRow in data:
             colId = 0
             for vCol in vRow:
-                sh.write(rowId, colId, vRow[vCol])
-                colId += 1
+                if vCol in header.keys():
+                    pos = header[vCol]
+                else:
+                    pos = len(header)
+                    header[vCol] = pos
+                    sh.write(hRowId, pos, vCol)
+                sh.write(rowId, pos, vRow[vCol])
+                # colId += 1
             rowId += 1
 
     except Exception as ex:
