@@ -58,10 +58,11 @@ def flatted(data) -> dict:
 def duplciateRow(nestedRow, record, rows, parent, sep):
 
     for aRow in nestedRow:
+        aCopyRecord = record.copy()
         for aCol in aRow:
             key = parent + sep + aCol
-            record[key] = aRow[aCol]
-        rows.append(record)
+            aCopyRecord[key] = aRow[aCol]
+        rows.append(aCopyRecord)
 
 def denormalize(data) -> dict:
     logging.debug('DENORMALIZE')
@@ -71,8 +72,8 @@ def denormalize(data) -> dict:
     try:
         for row in data:
             record = {}
+            nestedRow = {}
             for elm in row:
-                logging.debug(elm)
                 value = row[elm]
                 typeValue = type(value)
                 if typeValue is list:
@@ -97,7 +98,7 @@ def denormalize(data) -> dict:
 
 
 def main():
-    srcFile = 'sample-nest-list-multi-with-null.json'
+    srcFile = 'sample-nest-list-mix.json'
     srcFullName = '../data/' + srcFile
     outFilePath = '../output/'
     outFileName = srcFile + '.xls'
@@ -116,5 +117,5 @@ def main():
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                         datefmt='%Y-%m-%d:%H:%M:%S',
-                        level=logging.DEBUG)
+                        level=logging.INFO)
     main()
