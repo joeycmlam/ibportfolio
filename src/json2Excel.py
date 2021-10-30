@@ -3,8 +3,6 @@ import json
 import pandas as pd
 import xlwt
 
-jsonFile = "../data/sample-nest.json"
-
 
 
 def read_json(filename: str) -> dict:
@@ -31,6 +29,7 @@ def write2excel(fileName, sheetName, data):
             sh.write(rowId, colId, hCol)
             colId += 1
 
+        #values
         rowId += 1
         for vRow in data.values:
             colId = 0
@@ -65,7 +64,6 @@ def main():
                                , max_level=1, sep='.'
                                , record_path=['funds'])
 
-        # df.to_excel(outFullName)
         write2excel(outFullName, 'S1', df)
     except Exception as ex:
         logging.error(ex)
@@ -76,5 +74,5 @@ def main():
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                         datefmt='%Y-%m-%d:%H:%M:%S',
-                        level=logging.DEBUG)
+                        level=logging.INFO)
     main()
