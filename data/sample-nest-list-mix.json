@@ -4,11 +4,6 @@
   "lastName":"Verma",
   "funds": [
     {
-      "fund_id": "JPM1",
-      "txn_type": "subscription",
-      "unit": 10
-    },
-    {
       "fund_id": "JPM2",
       "txn_type": "redemption",
       "unit": 20

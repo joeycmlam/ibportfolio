@@ -33,7 +33,7 @@ def main():
 def main_list():
     try:
 
-        srcFile = 'sample-nest-list.json'
+        srcFile = 'sample-nest-list-multi.json'
         srcFullName = '../data/' + srcFile
         outFilePath = '../output/'
         outFileName = srcFile + '.xls'
@@ -43,8 +43,12 @@ def main_list():
 
         # df = pd.json_normalize(data)
 
-        df = pd.json_normalize(data, record_path=['funds'],
-                               meta=['id', 'firstName', 'lastName', 'email', 'country', 'Mob:'])
+        df = pd.json_normalize(data,
+                               meta=['id', 'firstName', 'lastName', 'country', ['contacts', 'email'], ['contacts', 'Mob']]
+                               , max_level=1, sep='->'
+                               , record_path=['funds'])
+
+
         df.to_excel(outFullName)
     except Exception as ex:
         logging.error(ex)
