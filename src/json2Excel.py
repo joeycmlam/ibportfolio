@@ -32,11 +32,20 @@ def main():
 
 def main_list():
     try:
-        data = read_json(filename="../data/sample-nest-list.json")
-        outFilename = "../output/data-nest-list.xlsx"
+
+        srcFile = 'sample-nest-list.json'
+        srcFullName = '../data/' + srcFile
+        outFilePath = '../output/'
+        outFileName = srcFile + '.xls'
+        outFullName = outFilePath + outFileName
+
+        data = read_json(filename=srcFullName)
+
+        # df = pd.json_normalize(data)
+
         df = pd.json_normalize(data, record_path=['funds'],
-                               meta=['id', 'firstName', 'lastName', 'email', 'country'])
-        df.to_excel(outFilename)
+                               meta=['id', 'firstName', 'lastName', 'email', 'country', 'Mob:'])
+        df.to_excel(outFullName)
     except Exception as ex:
         logging.error(ex)
     finally:
