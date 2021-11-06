@@ -3,38 +3,7 @@ import json
 import pandas as pd
 import xlwt
 import dictUtil
-
-
-def write2excel(fileName, sheetName, data):
-    logging.info('write2excel: [%s][%s]', fileName, sheetName)
-    wb = xlwt.Workbook()
-    sh = wb.add_sheet(sheetName)
-
-    try:
-        logging.debug('write2excl')
-        header = {}
-        hRowId = 0
-
-        # values
-        rowId = 1
-        for vRow in data:
-            colId = 0
-            for vCol in vRow:
-                if vCol in header.keys():
-                    pos = header[vCol]
-                else:
-                    pos = len(header)
-                    header[vCol] = pos
-                    sh.write(hRowId, pos, vCol)
-                sh.write(rowId, pos, vRow[vCol])
-                # colId += 1
-            rowId += 1
-
-    except Exception as ex:
-        logging.error('write2excel: [%s]', ex)
-        raise Exception(ex)
-    finally:
-        wb.save(fileName)
+import excelUtil
 
 
 def read_json(filename: str) -> dict:
@@ -55,7 +24,7 @@ def flatted(data) -> dict:
     return record
 
 
-def duplciateRow(nestedRow, record, rows, parent, sep):
+def flattenRow(nestedRow, record, rows, parent, sep):
 
     for aRow in nestedRow:
         aCopyRecord = record.copy()
@@ -67,8 +36,6 @@ def duplciateRow(nestedRow, record, rows, parent, sep):
 def denormalize(data) -> dict:
     logging.debug('DENORMALIZE')
     rows = []
-    record = {}
-    nestedRow = []
     try:
         for row in data:
             record = {}
@@ -87,7 +54,7 @@ def denormalize(data) -> dict:
                     record[elm] = value
 
             if len(nestedRow) > 0:
-                duplciateRow(nestedRow, record, rows, parent, '.')
+                flattenRow(nestedRow, record, rows, parent, '.')
             else:
                 rows.append(record)
     except Exception as ex:
