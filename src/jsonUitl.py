@@ -57,7 +57,7 @@ def denormalize(data) -> dict:
                     record[elm] = value
 
             if len(nestedRow) > 0:
-                flattenRow(nestedRow, record, rows, parent, CONST_SEP)
+                flattenRow(nestedRow, record, rows, parent, '->')
             else:
                 rows.append(record)
     except Exception as ex:
