@@ -1,9 +1,9 @@
 import logging
 import json
 import pandas as pd
-import xlwt
 import dictUtil
 import excelUtil
+
 
 
 def read_json(filename: str) -> dict:
@@ -11,15 +11,16 @@ def read_json(filename: str) -> dict:
         with open(filename, "r") as f:
             data = json.loads(f.read())
     except:
-        raise Exception(f"Reading {filename} file encountered an error")
+        raise Exception("Reading {filename} file encountered an error")
 
     return data
 
 
-def flatted(data) -> dict:
+def flatted(data, prefix, sep) -> dict:
     record = {}
     for elm in data:
-        record[elm] = data[elm]
+        key = prefix + sep + elm
+        record[key] = data[elm]
 
     return record
 
@@ -36,6 +37,8 @@ def flattenRow(nestedRow, record, rows, parent, sep):
 def denormalize(data) -> dict:
     logging.debug('DENORMALIZE')
     rows = []
+    CONST_SEP = '.'
+
     try:
         for row in data:
             record = {}
@@ -48,13 +51,13 @@ def denormalize(data) -> dict:
                     parent = elm
                     nestedRow = denormalize(value)
                 elif typeValue is dict:
-                    nested = flatted(value)
+                    nested = flatted(value, elm, CONST_SEP)
                     record = dictUtil.Merge(record, nested)
                 else:
                     record[elm] = value
 
             if len(nestedRow) > 0:
-                flattenRow(nestedRow, record, rows, parent, '.')
+                flattenRow(nestedRow, record, rows, parent, CONST_SEP)
             else:
                 rows.append(record)
     except Exception as ex:
@@ -74,7 +77,7 @@ def main():
     try:
         jsonMsg = read_json(filename=srcFullName)
         table = denormalize(jsonMsg)
-        write2excel(outFullName, 'output', table)
+        excelUtil.write2excel(outFullName, 'output', table)
     except Exception as ex:
         logging.error(ex)
     finally:
