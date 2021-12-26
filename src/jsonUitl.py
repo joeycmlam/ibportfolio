@@ -67,7 +67,7 @@ def denormalize(data) -> dict:
     return rows
 
 
-def main(fileName):
+def main(fileName, subSection):
     srcFile = fileName
     srcFullName = '../data/' + srcFile
     outFilePath = '../output/'
@@ -76,7 +76,12 @@ def main(fileName):
 
     try:
         jsonMsg = read_json(filename=srcFullName)
-        table = denormalize(jsonMsg)
+
+        if len(subSection) > 0:
+            deMsg = jsonMsg['funds']
+        else:
+            deMsg = jsonMsg
+        table = denormalize(deMsg)
         excelUtil.write2excel(outFullName, 'output', table)
     except Exception as ex:
         logging.error(ex)
@@ -84,8 +89,9 @@ def main(fileName):
         logging.info('END')
 
 
+
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                         datefmt='%Y-%m-%d:%H:%M:%S',
                         level=logging.INFO)
-    main('sample-nest-list-mix.json')
+    main('sample-nest-list-multi.json')
