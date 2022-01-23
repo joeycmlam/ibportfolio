@@ -1,0 +1,12 @@
+{
+    "tnx_id": 1000,
+    "client_code": "XXXX",
+    "funds": [
+      {
+        "fund_id": "XXXX",
+        "txn_type": "XXXXXX",
+        "unit": 0
+      }
+    ],
+    "settlement_currency": "XXX"
+  }
