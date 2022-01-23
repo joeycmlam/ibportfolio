@@ -19,11 +19,12 @@ def populateData(msgTemplate, msgData, p_outfile):
     for key, value in df.iterrows():
         newData = msgTemplate
         logging.info('before: {0}'.format(newData))
-        newData['funds'][0]['fund_id'] = value['funds.fund_id']
-        newData['funds'][0]['txn_type'] = value['funds.txn_type']
-        newData['funds'][0]['unit'] = value['funds.unit']
         for col in value.index:
             newData[col] = value[col]
+            if '.' in col:
+                lstVal = col.split('.')
+                newData[lstVal[0]][0][lstVal[1]] = value[col]
+
         fileOut.writelines(str(newData))
     fileOut.close()
 
