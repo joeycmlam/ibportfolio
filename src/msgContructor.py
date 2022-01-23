@@ -16,16 +16,18 @@ def populateData(msgTemplate, msgData, p_outfile):
     df = pandas.read_excel(msgData, sheet_name='data')
     fileOut = open(p_outfile, "w")
 
+    idxRow = 0
     for key, value in df.iterrows():
         newData = msgTemplate
-        logging.info('before: {0}'.format(newData))
         for col in value.index:
-            newData[col] = value[col]
             if '.' in col:
                 lstVal = col.split('.')
                 newData[lstVal[0]][0][lstVal[1]] = value[col]
+            else:
+                newData[col] = value[col]
+        fileOut.writelines(json.dumps(newData))
+        idxRow = idxRow + 1
 
-        fileOut.writelines(str(newData))
     fileOut.close()
 
 def main(fileName, msgData, outputFile):
@@ -39,5 +41,5 @@ if __name__ == '__main__':
                         level=logging.DEBUG)
     logging.info('start')
     outfile = '{0}.{1}.json'.format('orders', datetime.datetime.today().strftime('%Y%m%d'))
-    main('../data/order_sample.json', '../data/orders.xlsx', '../output/{0}.txt'.format(outfile))
+    main('../data/order_sample.json', '../data/orders_multiple.xlsx', '../output/{0}'.format(outfile))
     logging.info('done')
