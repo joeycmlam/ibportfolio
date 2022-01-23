@@ -25,9 +25,8 @@ def populateData(msgTemplate, msgData, p_outfile):
                 newData[lstVal[0]][0][lstVal[1]] = value[col]
             else:
                 newData[col] = value[col]
-        fileOut.writelines(json.dumps(newData))
+        fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
         idxRow = idxRow + 1
-
     fileOut.close()
 
 def main(fileName, msgData, outputFile):
