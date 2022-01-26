@@ -11,6 +11,15 @@ def readJson(fileName):
     logging.debug(data)
     return data
 
+
+def getValue(col, value):
+    if '{current_timestamp}' == value[col]:
+        rtnValue = str(datetime.datetime.now());
+    else:
+        rtnValue = value[col]
+
+    return rtnValue
+
 def populateData(msgTemplate, msgData, p_outfile):
     # logging.info('{0} {1}'.format(msgTemplate, msgData))
     df = pandas.read_excel(msgData, sheet_name='data')
@@ -35,15 +44,15 @@ def populateData(msgTemplate, msgData, p_outfile):
                 if '->' in col:
                     lstVal = col.split('->')
                     if curMsgId != prevMsgId:
-                        newData[lstVal[0]][0][lstVal[1]] = value[col]
+                        newData[lstVal[0]][0][lstVal[1]] = getValue(col, value)
                     else:
-                        newItem[lstVal[1]] = value[col]
+                        newItem[lstVal[1]] = getValue(col, value)
 
                 elif '.' in col:
                     lstVal = col.split('.')
-                    newData[lstVal[0]][lstVal[1]] = value[col]
+                    newData[lstVal[0]][lstVal[1]] = getValue(col, value)
                 else:
-                    newData[col] = value[col]
+                    newData[col] = getValue(col, value)
 
             if prevMsgId == curMsgId:
                 newData[lstVal[0]].append(newItem)
