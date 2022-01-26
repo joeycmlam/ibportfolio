@@ -51,7 +51,7 @@
   {
     "id": 4,
     "firstName": "Shubham4",
-    "lastName": "Verma",
+    "lastName": "LastName4",
     "contact": {
       "email": "example@gmail.com",
       "Mob:": 1234567890
@@ -65,16 +65,14 @@
     "contact": {
       "email": "example@gmail.com",
       "Mob:": 1234567890
-    },
-    "country": "Taiwan"
+    }
   },
   {
     "id": 6,
     "firstName": "Shubham6",
     "lastName": "Verma",
     "contact": {
-      "email": "example@gmail.com",
-      "Mob:": 1234567890
+      "email": "example@gmail.com"
     },
     "country": "Japan"
   },
@@ -82,10 +80,18 @@
     "id": 7,
     "firstName": "Shubham7",
     "lastName": "Verma",
-    "contact": {
-      "email": "example@gmail.com",
-      "Mob:": 1234567890
-    },
-    "country": "HongKong"
+    "country": "HongKong",
+    "funds": [
+      {
+        "fund_id": "JPM2",
+        "txn_type": "redemption",
+        "unit": 30
+      },
+      {
+        "fund_id": "JPM3",
+        "txn_type": "redemption",
+        "unit": 40
+      }
+    ]
   }
 ]

@@ -18,26 +18,45 @@ def populateData(msgTemplate, msgData, p_outfile):
 
     try:
         fileOut.write('[')
-        idxRow = 0
+        rowId = 0
+        prevMsgId = 0
         for key, value in df.iterrows():
-            newData = msgTemplate
+            curMsgId = value['msgId']
+            newItem = {}
+
+            if rowId != 0 and prevMsgId != curMsgId:
+                fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
+                fileOut.write(',')
+
+            if prevMsgId != curMsgId:
+                newData = msgTemplate
+
             for col in value.index:
                 if '->' in col:
                     lstVal = col.split('->')
-                    newData[lstVal[0]][0][lstVal[1]] = value[col]
+                    if curMsgId != prevMsgId:
+                        newData[lstVal[0]][0][lstVal[1]] = value[col]
+                    else:
+                        newItem[lstVal[1]] = value[col]
+
                 elif '.' in col:
                     lstVal = col.split('.')
                     newData[lstVal[0]][lstVal[1]] = value[col]
                 else:
                     newData[col] = value[col]
-            fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
-            fileOut.write(',')
 
-            idxRow = idxRow + 1
+            if prevMsgId == curMsgId:
+                newData[lstVal[0]].append(newItem)
+
+
+            rowId = rowId + 1
+            prevMsgId = curMsgId
+
+        fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
         fileOut.write(']')
     except Exception as err:
         logging.error(err)
-        logging.error('row {0} col {1} value {2}'.format(idxRow, col, value))
+        logging.error('row {0} col {1} value {2}'.format(rowId, col, value))
     finally:
         fileOut.close()
 
