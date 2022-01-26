@@ -61,7 +61,7 @@ def populate_data(msgTemplate, msgData, p_outfile):
                 elif '.' in col:
                     lstVal = col.split('.')
                     newData[lstVal[0]][lstVal[1]] = get_value(col, value)
-                else:
+                elif col in newData:
                     newData[col] = get_value(col, value)
 
             if prevMsgId == curMsgId:
