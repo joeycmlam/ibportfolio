@@ -12,7 +12,7 @@ def readJson(fileName):
     return data
 
 
-def getValue(col, value):
+def get_value(col, value):
     if '{current_timestamp}' == value[col]:
         rtnValue = str(datetime.datetime.now());
     elif '{epoch_id}' == value[col]:
@@ -22,7 +22,7 @@ def getValue(col, value):
 
     return rtnValue
 
-def populateData(msgTemplate, msgData, p_outfile):
+def populate_data(msgTemplate, msgData, p_outfile):
     # logging.info('{0} {1}'.format(msgTemplate, msgData))
     df = pandas.read_excel(msgData, sheet_name='data')
     fileOut = open(p_outfile, "w")
@@ -46,15 +46,15 @@ def populateData(msgTemplate, msgData, p_outfile):
                 if '->' in col:
                     lstVal = col.split('->')
                     if curMsgId != prevMsgId:
-                        newData[lstVal[0]][0][lstVal[1]] = getValue(col, value)
+                        newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
                     else:
-                        newItem[lstVal[1]] = getValue(col, value)
+                        newItem[lstVal[1]] = get_value(col, value)
 
                 elif '.' in col:
                     lstVal = col.split('.')
-                    newData[lstVal[0]][lstVal[1]] = getValue(col, value)
+                    newData[lstVal[0]][lstVal[1]] = get_value(col, value)
                 else:
-                    newData[col] = getValue(col, value)
+                    newData[col] = get_value(col, value)
 
             if prevMsgId == curMsgId:
                 newData[lstVal[0]].append(newItem)
@@ -74,7 +74,7 @@ def populateData(msgTemplate, msgData, p_outfile):
 def main(fileName, msgData, outputFile):
     logging.info('[{0}] [{1}] [{2}]'.format(fileName, msgData, outputFile))
     msgTemplate = readJson(fileName)
-    populateData(msgTemplate, msgData, outputFile)
+    populate_data(msgTemplate, msgData, outputFile)
 
 if __name__ == '__main__':
     try:
