@@ -33,6 +33,7 @@ def populate_data(msgTemplate, msgData, p_outfile):
         prevMsgId = 0
         for key, value in df.iterrows():
             curMsgId = value['msgId']
+            lstNewItems = {}
             newItem = {}
 
             if rowId != 0 and prevMsgId != curMsgId:
@@ -48,7 +49,14 @@ def populate_data(msgTemplate, msgData, p_outfile):
                     if curMsgId != prevMsgId:
                         newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
                     else:
+                        found = lstVal[0] in lstNewItems.keys()
+                        if found:
+                            newItem = lstNewItems[lstVal[0]]
+                        else:
+                            newItem = {}
+
                         newItem[lstVal[1]] = get_value(col, value)
+                        lstNewItems[lstVal[0]] = newItem
 
                 elif '.' in col:
                     lstVal = col.split('.')
@@ -57,7 +65,9 @@ def populate_data(msgTemplate, msgData, p_outfile):
                     newData[col] = get_value(col, value)
 
             if prevMsgId == curMsgId:
-                newData[lstVal[0]].append(newItem)
+                for key, aItem in lstNewItems.items():
+                    newData[key].append(aItem)
+
 
 
             rowId = rowId + 1

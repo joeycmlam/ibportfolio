@@ -9,6 +9,12 @@
         "unit": 0
       }
     ],
+    "position": [
+      {
+        "fund_id": "YYYY",
+        "posn_unit": 1
+      }
+    ],
     "settlement_currency": "XXX",
     "create_datetime" : "2022-01-01 14:58:06"
   }
