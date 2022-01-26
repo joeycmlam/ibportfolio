@@ -15,6 +15,8 @@ def readJson(fileName):
 def getValue(col, value):
     if '{current_timestamp}' == value[col]:
         rtnValue = str(datetime.datetime.now());
+    elif '{epoch_id}' == value[col]:
+        rtnValue = datetime.datetime.now().timestamp()
     else:
         rtnValue = value[col]
 
