@@ -16,7 +16,7 @@ def get_value(col, value):
     if '{current_timestamp}' == value[col]:
         rtnValue = str(datetime.datetime.now().isoformat());
     elif '{epoch_id}' == value[col]:
-        rtnValue = str(datetime.datetime.now().timestamp()).ljust(17, '0')
+        rtnValue = str(datetime.datetime.now().timestamp()).ljust(17, '0').replace('.', '')
     else:
         rtnValue = value[col]
 
