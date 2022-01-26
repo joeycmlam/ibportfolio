@@ -32,6 +32,7 @@ def populate_data(df, msgTemplate, p_file):
         newData = {}
         for key, value in df.iterrows():
             curMsgId = value['msgId']
+            logging.info('row {0}'.format(rowId))
             lstNewItems = {}
             newItem = {}
 
@@ -65,6 +66,7 @@ def populate_data(df, msgTemplate, p_file):
             if prevMsgId == curMsgId:
                 for key, aItem in lstNewItems.items():
                     newData[key].append(aItem)
+
 
             rowId = rowId + 1
             prevMsgId = curMsgId
