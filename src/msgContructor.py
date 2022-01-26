@@ -3,6 +3,7 @@ import sys
 import datetime
 import json
 import pandas
+import copy
 
 def readJson(fileName):
     logging.info(fileName)
@@ -22,26 +23,24 @@ def get_value(col, value):
 
     return rtnValue
 
-def populate_data(msgTemplate, msgData, p_outfile):
-    # logging.info('{0} {1}'.format(msgTemplate, msgData))
-    df = pandas.read_excel(msgData, sheet_name='data')
-    fileOut = open(p_outfile, "w")
+def populate_data(df, msgTemplate, p_file):
 
     try:
-        fileOut.write('[')
+        p_file.write('[')
         rowId = 0
         prevMsgId = 0
+        newData = {}
         for key, value in df.iterrows():
             curMsgId = value['msgId']
             lstNewItems = {}
             newItem = {}
 
             if rowId != 0 and prevMsgId != curMsgId:
-                fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
-                fileOut.write(',')
+                p_file.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
+                p_file.write(',')
 
             if prevMsgId != curMsgId:
-                newData = msgTemplate
+                newData = copy.deepcopy(msgTemplate)
 
             for col in value.index:
                 if '->' in col:
@@ -49,8 +48,7 @@ def populate_data(msgTemplate, msgData, p_outfile):
                     if curMsgId != prevMsgId:
                         newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
                     else:
-                        found = lstVal[0] in lstNewItems.keys()
-                        if found:
+                        if (lstVal[0] in lstNewItems.keys()):
                             newItem = lstNewItems[lstVal[0]]
                         else:
                             newItem = {}
@@ -68,23 +66,28 @@ def populate_data(msgTemplate, msgData, p_outfile):
                 for key, aItem in lstNewItems.items():
                     newData[key].append(aItem)
 
-
-
             rowId = rowId + 1
             prevMsgId = curMsgId
 
-        fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
-        fileOut.write(']')
+        p_file.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
+        p_file.write(']')
     except Exception as err:
         logging.error(err)
         logging.error('row {0} col {1} value {2}'.format(rowId, col, value))
     finally:
-        fileOut.close()
+        p_file.close()
 
 def main(fileName, msgData, outputFile):
-    logging.info('[{0}] [{1}] [{2}]'.format(fileName, msgData, outputFile))
-    msgTemplate = readJson(fileName)
-    populate_data(msgTemplate, msgData, outputFile)
+    try:
+        logging.info('[{0}] [{1}] [{2}]'.format(fileName, msgData, outputFile))
+        msgTemplate = readJson(fileName)
+        df = pandas.read_excel(msgData, sheet_name='data')
+        fileOut = open(outputFile, "w")
+        populate_data(df, msgTemplate, fileOut)
+    except Exception as err:
+        logging.error(err)
+        raise err
+
 
 if __name__ == '__main__':
     try:
