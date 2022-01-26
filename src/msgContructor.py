@@ -17,6 +17,7 @@ def populateData(msgTemplate, msgData, p_outfile):
     fileOut = open(p_outfile, "w")
 
     try:
+        fileOut.write('[')
         idxRow = 0
         for key, value in df.iterrows():
             newData = msgTemplate
@@ -24,13 +25,19 @@ def populateData(msgTemplate, msgData, p_outfile):
                 if '->' in col:
                     lstVal = col.split('->')
                     newData[lstVal[0]][0][lstVal[1]] = value[col]
+                elif '.' in col:
+                    lstVal = col.split('.')
+                    newData[lstVal[0]][lstVal[1]] = value[col]
                 else:
                     newData[col] = value[col]
             fileOut.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
+            fileOut.write(',')
+
             idxRow = idxRow + 1
+        fileOut.write(']')
     except Exception as err:
         logging.error(err)
-        logging.error(value)
+        logging.error('row {0} col {1} value {2}'.format(idxRow, col, value))
     finally:
         fileOut.close()
 
@@ -48,7 +55,7 @@ if __name__ == '__main__':
         logging.info('start')
 
         templateFile = '../config/order_sample.json'
-        dataFile = '../data/orders_multiple.xlsx'
+        dataFile = '../data/orders_w_id.xlsx'
         outfile = '../output/{0}.{1}.json'.format('orders', datetime.datetime.today().strftime('%Y%m%d'))
         main(templateFile, dataFile, outfile)
     except Exception as err:
