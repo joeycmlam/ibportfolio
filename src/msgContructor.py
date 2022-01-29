@@ -23,6 +23,31 @@ def get_value(col, value):
 
     return rtnValue
 
+def populate_row (newData, value, prevMsgId, lstNewItems, newItem):
+    curMsgId = value['msgId']
+
+    for col in value.index:
+        if '->' in col:
+            lstVal = col.split('->')
+            if curMsgId != prevMsgId:
+                newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
+            else:
+                if (lstVal[0] in lstNewItems.keys()):
+                    newItem = lstNewItems[lstVal[0]]
+                else:
+                    newItem = {}
+
+                newItem[lstVal[1]] = get_value(col, value)
+                lstNewItems[lstVal[0]] = newItem
+
+        elif '.' in col:
+            lstVal = col.split('.')
+            newData[lstVal[0]][lstVal[1]] = get_value(col, value)
+        elif col in newData:
+            newData[col] = get_value(col, value)
+
+    return newData
+
 def populate_data(df, msgTemplate, p_file):
 
     try:
@@ -43,25 +68,7 @@ def populate_data(df, msgTemplate, p_file):
             if prevMsgId != curMsgId:
                 newData = copy.deepcopy(msgTemplate)
 
-            for col in value.index:
-                if '->' in col:
-                    lstVal = col.split('->')
-                    if curMsgId != prevMsgId:
-                        newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
-                    else:
-                        if (lstVal[0] in lstNewItems.keys()):
-                            newItem = lstNewItems[lstVal[0]]
-                        else:
-                            newItem = {}
-
-                        newItem[lstVal[1]] = get_value(col, value)
-                        lstNewItems[lstVal[0]] = newItem
-
-                elif '.' in col:
-                    lstVal = col.split('.')
-                    newData[lstVal[0]][lstVal[1]] = get_value(col, value)
-                elif col in newData:
-                    newData[col] = get_value(col, value)
+            newData = populate_row(newData, value, prevMsgId, lstNewItems, newItem)
 
             if prevMsgId == curMsgId:
                 for key, aItem in lstNewItems.items():
@@ -71,8 +78,7 @@ def populate_data(df, msgTemplate, p_file):
             rowId = rowId + 1
             prevMsgId = curMsgId
 
-        p_file.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
-        p_file.write(']')
+        p_file.writelines('{0}{1}]'.format(json.dumps(newData), '\n'))
     except Exception as err:
         logging.error(err)
         logging.error('row {0} col {1} value {2}'.format(rowId, col, value))
