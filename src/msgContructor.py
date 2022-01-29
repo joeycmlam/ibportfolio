@@ -4,6 +4,7 @@ import datetime
 import json
 import pandas
 import copy
+import time
 
 def readJson(fileName):
     logging.info(fileName)
@@ -14,9 +15,9 @@ def readJson(fileName):
 
 def get_value(col, value):
     if '{current_timestamp}' == value[col]:
-        rtnValue = str(datetime.datetime.now().isoformat());
+        rtnValue = str(datetime.datetime.now().isoformat())
     elif '{epoch_id}' == value[col]:
-        rtnValue = str(datetime.datetime.now().timestamp()).ljust(17, '0').replace('.', '')
+        rtnValue = time.time_ns()
     else:
         rtnValue = value[col]
 
