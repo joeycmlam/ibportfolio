@@ -23,14 +23,15 @@ def get_value(col, value):
 
     return rtnValue
 
-def populate_row (newData, value, prevMsgId, lstNewItems, newItem):
+def populate_row (targetData, value, prevMsgId, lstNewItems):
     curMsgId = value['msgId']
 
+    newItem = {}
     for col in value.index:
         if '->' in col:
             lstVal = col.split('->')
             if curMsgId != prevMsgId:
-                newData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
+                targetData[lstVal[0]][0][lstVal[1]] = get_value(col, value)
             else:
                 if (lstVal[0] in lstNewItems.keys()):
                     newItem = lstNewItems[lstVal[0]]
@@ -42,46 +43,45 @@ def populate_row (newData, value, prevMsgId, lstNewItems, newItem):
 
         elif '.' in col:
             lstVal = col.split('.')
-            newData[lstVal[0]][lstVal[1]] = get_value(col, value)
-        elif col in newData:
-            newData[col] = get_value(col, value)
+            targetData[lstVal[0]][lstVal[1]] = get_value(col, value)
+        elif col in targetData:
+            targetData[col] = get_value(col, value)
 
-    return newData
+    return targetData
 
 def populate_data(df, msgTemplate, p_file):
 
     try:
         p_file.write('[')
-        rowId = 0
-        prevMsgId = 0
+        row_id = 0
+        prev_msg_id = 0
         newData = {}
+
         for key, value in df.iterrows():
             curMsgId = value['msgId']
-            logging.info('row {0}'.format(rowId))
+            logging.info('row {0}'.format(row_id))
             lstNewItems = {}
-            newItem = {}
 
-            if rowId != 0 and prevMsgId != curMsgId:
-                p_file.writelines('{0}{1}'.format(json.dumps(newData), '\n'))
-                p_file.write(',')
+            if row_id != 0 and prev_msg_id != curMsgId:
+                p_file.writelines('{0}{1},'.format(json.dumps(newData), '\n'))
 
-            if prevMsgId != curMsgId:
+            if prev_msg_id != curMsgId:
                 newData = copy.deepcopy(msgTemplate)
 
-            newData = populate_row(newData, value, prevMsgId, lstNewItems, newItem)
+            newData = populate_row(newData, value, prev_msg_id, lstNewItems)
 
-            if prevMsgId == curMsgId:
+            if prev_msg_id == curMsgId:
                 for key, aItem in lstNewItems.items():
                     newData[key].append(aItem)
 
-
-            rowId = rowId + 1
-            prevMsgId = curMsgId
+            row_id = row_id + 1
+            prev_msg_id = curMsgId
+        #end for-loop
 
         p_file.writelines('{0}{1}]'.format(json.dumps(newData), '\n'))
     except Exception as err:
         logging.error(err)
-        logging.error('row {0} col {1} value {2}'.format(rowId, col, value))
+        logging.error('row {0} col {1} value {2}'.format(row_id, col, value))
     finally:
         p_file.close()
 
