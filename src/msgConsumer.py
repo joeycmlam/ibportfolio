@@ -15,7 +15,7 @@ def main():
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
 
-    channel.queue_declare(queue=p_queue)
+    # channel.queue_declare(queue=p_queue)
 
     channel.basic_consume(queue=p_queue, on_message_callback=on_message, auto_ack=True)
 
