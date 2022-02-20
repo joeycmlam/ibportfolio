@@ -1,12 +1,11 @@
-version: '2'
-
+version: '3.8'
 services:
   rabbitmq:
-    image: docker.io/bitnami/rabbitmq:3-management
+    container_name: "myrabbit"
+    image: rabbitmq:3-management
     ports:
-
-      - '5672:5672'
-      - '15672:15672'
+      - '5672:5672'     # AMQP protocol port
+      - '15672:15672'   # HTTP management UI
     environment:
       - RABBITMQ_SECURE_PASSWORD=yes
     volumes:
