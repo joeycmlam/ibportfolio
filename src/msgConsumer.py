@@ -1,5 +1,6 @@
 import pika
 import logging
+import sys
 
 
 p_host = 'localhost'
@@ -22,7 +23,9 @@ def main():
     channel.start_consuming()
 
 if __name__ == '__main__':
+    log_filename = '../log/consumer.log'
     logging.basicConfig(
+        filename=log_filename, filemode='a',
         format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)s - %(funcName)s()] %(message)s',
         datefmt='%Y-%m-%d:%H:%M:%S',
         level=logging.INFO)
