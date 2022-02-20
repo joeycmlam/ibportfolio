@@ -15,13 +15,13 @@ def readJson(fileName):
 
 def get_value(col, value):
     if '{current_timestamp}' == value[col]:
-        rtnValue = str(datetime.datetime.now().isoformat())
+        rtn_value = str(datetime.datetime.now().isoformat())
     elif '{epoch_id}' == value[col]:
-        rtnValue = time.time_ns()
+        rtn_value = time.time_ns()
     else:
-        rtnValue = value[col]
+        rtn_value = value[col]
 
-    return rtnValue
+    return rtn_value
 
 def populate_row (targetData, value, prevMsgId, lstNewItems):
     curMsgId = value['msgId']
@@ -50,13 +50,11 @@ def populate_row (targetData, value, prevMsgId, lstNewItems):
     return targetData
 
 def populate_data(df, msgTemplate, p_file):
-
+    row_id = 0
+    prev_msg_id = 0
+    newData = {}
     try:
         p_file.write('[')
-        row_id = 0
-        prev_msg_id = 0
-        newData = {}
-
         for key, value in df.iterrows():
             curMsgId = value['msgId']
             logging.info('row {0}'.format(row_id))
