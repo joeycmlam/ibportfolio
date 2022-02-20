@@ -1,8 +1,8 @@
 import pika
 import logging
 
-p_host = 'myhost01'
-p_queue = 'q_order'
+p_host = 'localhost'
+p_queue = 'Q_ORDER_T'
 
 
 def main():
@@ -12,9 +12,9 @@ def main():
         channel = connection.channel()
         channel.queue_declare(queue=p_queue)
 
-        channel.basic_publish(exchange='',
-                              routing_key=p_queue,
-                              body='Hello World!')
+        for i in range(0, 10):
+            msg = 'order: ' + str(i)
+            channel.basic_publish(exchange='', routing_key=p_queue, body=msg)
     except Exception as err:
         raise err
     finally:
@@ -28,7 +28,8 @@ if __name__ == '__main__':
         level=logging.INFO)
     try:
         logging.info('start')
-        # main()
+        main()
         logging.info('completed')
     except Exception as err:
         logging.error(err)
+        sys.exit(-1)

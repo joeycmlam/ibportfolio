@@ -2,21 +2,23 @@ import pika
 import logging
 
 
-p_host = 'myhost01'
-p_queue = 'q_order'
+p_host = 'localhost'
+p_queue = 'Q_ORDER_T'
+
+def on_message(ch, method, properties, body):
+    msg = body.decode('UTF-8')
+    logging.info('msg: [' + msg + ']')
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=p_host))
+    connection_params = pika.ConnectionParameters(host=p_host)
+    connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
 
     channel.queue_declare(queue=p_queue)
 
-    def callback(ch, method, properties, body):
-        logging.info(" [x] Received %r" % body)
+    channel.basic_consume(queue=p_queue, on_message_callback=on_message, auto_ack=True)
 
-    channel.basic_consume(queue=p_queue, on_message_callback=callback, auto_ack=True)
-
-    logging.info(' [*] Waiting for messages. To exit press CTRL+C')
+    logging.info('subscribed to' + p_queue + ' waiting for messages...')
     channel.start_consuming()
 
 if __name__ == '__main__':
