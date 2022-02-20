@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   rabbitmq:
-    container_name: "myrabbit"
+    container_name: "mq_dev"
     image: rabbitmq:3-management
     ports:
       - '5672:5672'     # AMQP protocol port
