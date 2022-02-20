@@ -1,5 +1,6 @@
 import pika
 import logging
+import sys
 
 p_host = 'localhost'
 p_queue = 'Q_ORDER_T'
