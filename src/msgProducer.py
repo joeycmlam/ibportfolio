@@ -13,10 +13,11 @@ def main():
         # queue_declear --> create a new queue only
         # channel.queue_declare(queue=p_queue)
 
-        for i in range(0, 10):
+
+        for i in range(0, 100):
             msg = 'order: ' + str(i)
             logging.info('msg [{0}]'.format(msg))
-            channel.basic_publish(exchange='', routing_key=p_queue, body=msg)
+            channel.basic_publish(exchange='', properties=pika.BasicProperties(delivery_mode = 2), routing_key=p_queue, body=msg)
     except Exception as err:
         raise err
     finally:
